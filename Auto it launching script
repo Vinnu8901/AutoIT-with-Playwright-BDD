@@ -43,3 +43,57 @@ WinWaitActive("Contact Center Desktop")
 Sleep(5000)
 
 MsgBox(0, "Success", "CCD Login Completed")
+
+
+
+
+; =========================================
+; FILE NAME: CCD_Login.au3
+; PURPOSE  : Launch CCD + Handle Login
+; =========================================
+
+; Step 1: Launch CCD Application
+Run("C:\CCD\QA01\CCD\ContactCenterDesktop.exe")
+
+; Wait for application to load
+Sleep(5000)
+
+; Step 2: Handle CCP Alert popup
+WinWaitActive("CCP Alert", "", 20)
+ControlClick("CCP Alert", "", "Button1")
+
+; Step 3: Wait for Logon window
+WinWaitActive("Logon", "", 20)
+Sleep(1000)
+
+; Step 4: Click Extension field (adjust coordinates if needed)
+MouseClick("left", 950, 520, 1)
+Sleep(500)
+
+; Enter Extension
+Send("1234")
+
+; Move to dropdown
+Send("{TAB}")
+Sleep(500)
+
+; Open dropdown
+Send("{DOWN}")
+Sleep(500)
+
+; Select "Offline - No Phone"
+Send("{DOWN}{DOWN}")
+Sleep(500)
+
+; Confirm selection
+Send("{ENTER}")
+
+; Step 5: Click OK button (adjust coordinates if needed)
+MouseClick("left", 1050, 650, 1)
+
+; Step 6: Wait for CCD main window
+WinWaitActive("Contact Center Desktop", "", 30)
+
+Sleep(5000)
+
+MsgBox(0, "Success", "CCD Launched & Login Completed")
