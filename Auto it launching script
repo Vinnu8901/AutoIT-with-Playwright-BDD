@@ -1,0 +1,24 @@
+; ===============================
+; CCD AUTOMATION SCRIPT
+; ===============================
+
+; Wait for CCP Alert popup
+WinWaitActive("CCP Alert", "", 20)
+ControlClick("CCP Alert", "", "Button1")
+
+; Wait for Logon window
+WinWaitActive("Logon", "", 20)
+
+; Enter Extension Number
+ControlSetText("Logon", "", "Edit1", "1234")
+
+; Select Channel (Offline - No Phone)
+ControlCommand("Logon", "", "ComboBox1", "SelectString", "Offline - No Phone")
+
+; Click OK
+ControlClick("Logon", "", "Button1")
+
+; Wait for CCD main window
+WinWaitActive("Contact Center Desktop")
+
+Sleep(5000)
