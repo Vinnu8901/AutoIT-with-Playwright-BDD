@@ -97,3 +97,56 @@ WinWaitActive("Contact Center Desktop", "", 30)
 Sleep(5000)
 
 MsgBox(0, "Success", "CCD Launched & Login Completed")
+
+
+
+
+
+
+; =========================================
+; CCD AUTOMATION SCRIPT (WITH VERSION FIX)
+; =========================================
+
+; Step 1: Launch CCD
+Run("C:\CCD\QA01\CCD\ContactCenterDesktop.exe")
+
+Sleep(5000)
+
+; Step 2: Handle "Invalid Desktop Version" popup
+If WinExists("Invalid Desktop Version") Then
+WinActivate("Invalid Desktop Version")
+Sleep(1000)
+ControlClick("Invalid Desktop Version", "", "Button1") ; OK button
+EndIf
+
+; Step 3: Handle CCP Alert popup
+WinWaitActive("CCP Alert", "", 20)
+ControlClick("CCP Alert", "", "Button1")
+
+; Step 4: Wait for Logon window
+WinWaitActive("Logon", "", 20)
+Sleep(1000)
+
+; Step 5: Enter Extension (using keyboard method)
+Send("1234")
+
+Send("{TAB}")
+Sleep(500)
+
+Send("{DOWN}")
+Sleep(500)
+
+Send("{DOWN}{DOWN}") ; adjust if needed
+Sleep(500)
+
+Send("{ENTER}")
+
+; Step 6: Click OK (press Enter instead of mouse)
+Send("{ENTER}")
+
+; Step 7: Wait for CCD main window
+WinWaitActive("Contact Center Desktop", "", 30)
+
+Sleep(5000)
+
+MsgBox(0, "Success", "CCD Login Completed")
