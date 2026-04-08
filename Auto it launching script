@@ -333,3 +333,268 @@ If WinExists("Confirm Needed") Then
 EndIf
 
 MsgBox(0, "SUCCESS", "Fraud Closure Completed Successfully 🚀")
+
+
+
+
+; ==========================================
+; CCD FULL AUTOMATION - FRAUD CLOSURE
+; ==========================================
+
+Opt("WinTitleMatchMode", 2)
+Opt("SendKeyDelay", 50)
+
+Global $ccdPath = "C:\CCD\QA01\CCD\ContactCenterDesktop.exe"
+
+; =========================
+; MAIN EXECUTION
+; =========================
+LaunchCCD()
+HandlePopups()
+LoginCCD()
+OpenAccountMaintenance()
+CustomerVerification()
+SelectCustomer()
+LaunchFraudClosure()
+HandleLostStolenWorkflow()
+
+MsgBox(0, "SUCCESS", "Fraud Closure Completed Successfully 🚀")
+
+; =========================
+; FUNCTIONS
+; =========================
+
+Func LaunchCCD()
+    Run($ccdPath)
+    Sleep(4000)
+EndFunc
+
+; -------------------------
+; HANDLE POPUPS (GENERIC)
+; -------------------------
+Func HandlePopups()
+
+    For $i = 1 To 5
+
+        ; CCP Alert
+        If WinExists("CCP Alert") Then
+            WinActivate("CCP Alert")
+            Sleep(1000)
+            Send("{ENTER}")
+        EndIf
+
+        ; Version Error
+        If WinExists("Invalid Desktop Version") Then
+            WinActivate("Invalid Desktop Version")
+            Sleep(1000)
+            Send("{ENTER}")
+
+            Sleep(2000)
+            ProcessClose("ContactCenterDesktop.exe")
+            Sleep(3000)
+
+            Run($ccdPath)
+            Sleep(4000)
+        EndIf
+
+        Sleep(2000)
+    Next
+
+EndFunc
+
+; -------------------------
+; LOGIN
+; -------------------------
+Func LoginCCD()
+
+    WinWait("Logon", "", 20)
+    WinActivate("Logon")
+
+    Sleep(2000)
+
+    ; Navigate to dropdown
+    Send("{TAB}{TAB}")
+    Sleep(1000)
+
+    ; Select Offline - No Phone
+    Send("offline")
+    Sleep(1000)
+    Send("{ENTER}")
+
+    Sleep(1000)
+
+    ; Click OK
+    Send("{ENTER}")
+
+    ; Wait for main screen
+    WinWait("Contact Center Desktop", "", 30)
+    Sleep(5000)
+
+EndFunc
+
+; -------------------------
+; OPEN ACCOUNT MAINTENANCE
+; -------------------------
+Func OpenAccountMaintenance()
+
+    WinActivate("Contact Center Desktop")
+    Sleep(3000)
+
+    ; Try menu shortcut
+    Send("!t")
+    Sleep(2000)
+
+    ; Fallback click (UPDATE COORDS IF NEEDED)
+    MouseClick("left", 120, 150, 1)
+
+    Sleep(3000)
+
+EndFunc
+
+; -------------------------
+; CUSTOMER VERIFICATION
+; -------------------------
+Func CustomerVerification()
+
+    WinWait("Customer Identification", "", 20)
+    WinActivate("Customer Identification")
+
+    Sleep(1000)
+
+    ; Account Number
+    Send("5194520001889254")
+    Send("{TAB}")
+
+    ; SSN
+    Send("6027")
+    Send("{TAB}")
+
+    ; DOB
+    Send("04/19/1990")
+
+    Sleep(1000)
+
+    ; Click Verify
+    Send("{TAB}{TAB}{TAB}")
+    Send("{ENTER}")
+
+EndFunc
+
+; -------------------------
+; SELECT CUSTOMER
+; -------------------------
+Func SelectCustomer()
+
+    WinWait("Customer Search Results", "", 20)
+    WinActivate("Customer Search Results")
+
+    Sleep(2000)
+
+    ; Select Customer
+    Send("{TAB}{TAB}")
+    Send("{ENTER}")
+
+    Sleep(5000)
+
+EndFunc
+
+; -------------------------
+; LAUNCH FRAUD CLOSURE
+; -------------------------
+Func LaunchFraudClosure()
+
+    WinActivate("Contact Center Desktop")
+    Sleep(3000)
+
+    ; Focus left panel
+    Send("{TAB}{TAB}{TAB}")
+    Sleep(1000)
+
+    ; Search/select option
+    Send("complete a fraud closure")
+    Sleep(1000)
+    Send("{ENTER}")
+
+EndFunc
+
+; -------------------------
+; LOST/STOLEN WORKFLOW
+; -------------------------
+Func HandleLostStolenWorkflow()
+
+    ; First popup
+    WinWait("AA Deconversion", "", 20)
+    WinActivate("AA Deconversion")
+
+    Sleep(1000)
+
+    ; Select first radio button
+    Send("{TAB}")
+    Send("{SPACE}")
+
+    ; Click Next
+    Send("{TAB}{TAB}")
+    Send("{ENTER}")
+
+    ; ---------------------
+    ; LOST/STOLEN SCREEN
+    ; ---------------------
+    WinWait("Lost/Stolen", "", 20)
+    WinActivate("Lost/Stolen")
+
+    Sleep(2000)
+
+    ; 1. Primary user
+    Send("{TAB}")
+    Send("{SPACE}")
+
+    ; 2. Temp hold → No
+    Send("{TAB}")
+    Send("No")
+
+    ; 3. PIN lost → No
+    Send("{TAB}")
+    Send("No")
+
+    ; 4. Missing checks → No
+    Send("{TAB}")
+    Send("No")
+
+    ; 5. Auto selection → No
+    Send("{TAB}")
+    Send("{SPACE}")
+
+    Sleep(1000)
+
+    ; ---------------------
+    ; SELECT TRANSACTIONS
+    ; ---------------------
+    ; Move to grid
+    Send("{TAB}{TAB}{TAB}{TAB}")
+    Sleep(1000)
+
+    ; Select multiple rows
+    Send("+{DOWN 10}")
+
+    Sleep(1000)
+
+    ; ---------------------
+    ; CONTINUE
+    ; ---------------------
+    Send("{TAB}{TAB}")
+    Send("{ENTER}")
+
+    Sleep(2000)
+
+    ; ---------------------
+    ; CONFIRM POPUP
+    ; ---------------------
+    If WinExists("Confirm Needed") Then
+        WinActivate("Confirm Needed")
+        Sleep(1000)
+        Send("{ENTER}")
+    EndIf
+
+EndFunc
+
+
