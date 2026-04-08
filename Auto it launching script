@@ -150,3 +150,186 @@ WinWaitActive("Contact Center Desktop", "", 30)
 Sleep(5000)
 
 MsgBox(0, "Success", "CCD Login Completed")
+
+
+
+
+
+
+
+; ==========================================
+; CCD FRAUD CLOSURE AUTOMATION
+; ==========================================
+
+Opt("WinTitleMatchMode", 2)
+
+Global $ccdPath = "C:\CCD\QA01\CCD\ContactCenterDesktop.exe"
+
+; =========================
+; STEP 1: LAUNCH CCD
+; =========================
+Run($ccdPath)
+
+; Handle CCP Alert popup
+WinWait("CCP Alert", "", 20)
+If WinExists("CCP Alert") Then
+    WinActivate("CCP Alert")
+    Sleep(1000)
+    Send("{ENTER}") ; Click OK
+EndIf
+
+; =========================
+; STEP 2: LOGIN WINDOW
+; =========================
+WinWait("Logon", "", 20)
+WinActivate("Logon")
+
+; Select dropdown → OFFLINE - NO PHONE
+Send("{TAB}{TAB}") ; move to dropdown
+Sleep(1000)
+Send("{DOWN}") ; navigate options
+Sleep(500)
+Send("{DOWN}")
+Sleep(500)
+Send("{ENTER}")
+
+Sleep(1000)
+Send("{ENTER}") ; Click OK
+
+; =========================
+; STEP 3: WAIT FOR CCD LOAD
+; =========================
+WinWait("Contact Center Desktop", "", 30)
+WinActivate("Contact Center Desktop")
+Sleep(5000)
+
+; =========================
+; STEP 4: CLICK SPANNER ICON 🔧
+; =========================
+; Using ALT shortcut (fallback: mouse)
+Send("!t") ; Try menu access
+
+Sleep(2000)
+
+; If not working → fallback click (update coords if needed)
+MouseClick("left", 120, 150, 1)
+
+; =========================
+; STEP 5: CUSTOMER IDENTIFICATION POPUP
+; =========================
+WinWait("Customer Identification", "", 20)
+WinActivate("Customer Identification")
+
+; Enter Account Number
+Send("5194520001889254")
+Send("{TAB}")
+
+; Enter SSN
+Send("6027")
+Send("{TAB}")
+
+; Enter DOB
+Send("04/19/1990")
+
+; Click VERIFY CUSTOMER
+Send("{TAB}{TAB}{TAB}")
+Send("{ENTER}")
+
+; =========================
+; STEP 6: CUSTOMER SEARCH RESULT
+; =========================
+WinWait("Customer Search Results", "", 20)
+WinActivate("Customer Search Results")
+
+Sleep(2000)
+
+; Select Customer
+Send("{TAB}{TAB}")
+Send("{ENTER}")
+
+; =========================
+; STEP 7: WAIT ACCOUNT LOAD
+; =========================
+WinWait("Contact Center Desktop", "", 20)
+Sleep(5000)
+
+; =========================
+; STEP 8: CLICK "COMPLETE A FRAUD CLOSURE"
+; =========================
+; Navigate left panel
+Send("{TAB}{TAB}{TAB}")
+Sleep(1000)
+
+; Scroll and select
+Send("complete a fraud closure")
+Sleep(1000)
+Send("{ENTER}")
+
+; =========================
+; STEP 9: WORKFLOW POPUP
+; =========================
+WinWait("AA Deconversion", "", 20)
+WinActivate("AA Deconversion")
+
+; Select first radio button
+Send("{TAB}")
+Send("{SPACE}")
+
+; Click NEXT
+Send("{TAB}{TAB}")
+Send("{ENTER}")
+
+; =========================
+; STEP 10: LOST/STOLEN WORKFLOW
+; =========================
+WinWait("Lost/Stolen", "", 20)
+WinActivate("Lost/Stolen")
+
+Sleep(2000)
+
+; 1. Select primary/joint user
+Send("{TAB}")
+Send("{SPACE}")
+
+; 2. Put temporary hold → NO
+Send("{TAB}")
+Send("No")
+
+; 3. PIN lost → NO
+Send("{TAB}")
+Send("No")
+
+; 4. Missing checks → NO
+Send("{TAB}")
+Send("No")
+
+; 5. Automatic selection → NO
+Send("{TAB}")
+Send("{SPACE}")
+
+; =========================
+; STEP 11: SELECT TRANSACTIONS
+; =========================
+; Move to transaction grid
+Send("{TAB}{TAB}{TAB}{TAB}")
+
+; Select all rows (SHIFT method)
+Send("+{DOWN 10}")
+
+Sleep(1000)
+
+; =========================
+; STEP 12: CONTINUE
+; =========================
+Send("{TAB}{TAB}")
+Send("{ENTER}")
+
+; =========================
+; STEP 13: FINAL CONFIRMATION
+; =========================
+If WinExists("Confirm Needed") Then
+    WinActivate("Confirm Needed")
+    Send("{ENTER}") ; YES
+EndIf
+
+MsgBox(0, "SUCCESS", "Fraud Closure Completed Successfully 🚀")
