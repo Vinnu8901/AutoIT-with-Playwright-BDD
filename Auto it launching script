@@ -1,356 +1,18 @@
-; =========================================
-; CCD AUTOMATION SCRIPT (FIXED VERSION)
-; =========================================
-
-; Wait for CCP Alert popup
-WinWaitActive("CCP Alert", "", 20)
-ControlClick("CCP Alert", "", "Button1")
-
-; Wait for Logon window
-WinWaitActive("Logon", "", 20)
-
-; Give small delay
-Sleep(1000)
-
-; Click Extension field manually (adjust coordinates if needed)
-MouseClick("left", 950, 520, 1)
-Sleep(500)
-
-; Enter Extension
-Send("1234")
-
-; Press TAB to go to dropdown
-Send("{TAB}")
-Sleep(500)
-
-; Open dropdown
-Send("{DOWN}")
-Sleep(500)
-
-; Select "Offline - No Phone"
-Send("{DOWN}{DOWN}")  ; adjust if position changes
-Sleep(500)
-
-; Press ENTER
-Send("{ENTER}")
-
-; Click OK button (adjust if needed)
-MouseClick("left", 1050, 650, 1)
-
-; Wait for CCD main window
-WinWaitActive("Contact Center Desktop")
-
-Sleep(5000)
-
-MsgBox(0, "Success", "CCD Login Completed")
-
-
-
-
-; =========================================
-; FILE NAME: CCD_Login.au3
-; PURPOSE  : Launch CCD + Handle Login
-; =========================================
-
-; Step 1: Launch CCD Application
-Run("C:\CCD\QA01\CCD\ContactCenterDesktop.exe")
-
-; Wait for application to load
-Sleep(5000)
-
-; Step 2: Handle CCP Alert popup
-WinWaitActive("CCP Alert", "", 20)
-ControlClick("CCP Alert", "", "Button1")
-
-; Step 3: Wait for Logon window
-WinWaitActive("Logon", "", 20)
-Sleep(1000)
-
-; Step 4: Click Extension field (adjust coordinates if needed)
-MouseClick("left", 950, 520, 1)
-Sleep(500)
-
-; Enter Extension
-Send("1234")
-
-; Move to dropdown
-Send("{TAB}")
-Sleep(500)
-
-; Open dropdown
-Send("{DOWN}")
-Sleep(500)
-
-; Select "Offline - No Phone"
-Send("{DOWN}{DOWN}")
-Sleep(500)
-
-; Confirm selection
-Send("{ENTER}")
-
-; Step 5: Click OK button (adjust coordinates if needed)
-MouseClick("left", 1050, 650, 1)
-
-; Step 6: Wait for CCD main window
-WinWaitActive("Contact Center Desktop", "", 30)
-
-Sleep(5000)
-
-MsgBox(0, "Success", "CCD Launched & Login Completed")
-
-
-
-
-
-
-; =========================================
-; CCD AUTOMATION SCRIPT (WITH VERSION FIX)
-; =========================================
-
-; Step 1: Launch CCD
-Run("C:\CCD\QA01\CCD\ContactCenterDesktop.exe")
-
-Sleep(5000)
-
-; Step 2: Handle "Invalid Desktop Version" popup
-If WinExists("Invalid Desktop Version") Then
-WinActivate("Invalid Desktop Version")
-Sleep(1000)
-ControlClick("Invalid Desktop Version", "", "Button1") ; OK button
-EndIf
-
-; Step 3: Handle CCP Alert popup
-WinWaitActive("CCP Alert", "", 20)
-ControlClick("CCP Alert", "", "Button1")
-
-; Step 4: Wait for Logon window
-WinWaitActive("Logon", "", 20)
-Sleep(1000)
-
-; Step 5: Enter Extension (using keyboard method)
-Send("1234")
-
-Send("{TAB}")
-Sleep(500)
-
-Send("{DOWN}")
-Sleep(500)
-
-Send("{DOWN}{DOWN}") ; adjust if needed
-Sleep(500)
-
-Send("{ENTER}")
-
-; Step 6: Click OK (press Enter instead of mouse)
-Send("{ENTER}")
-
-; Step 7: Wait for CCD main window
-WinWaitActive("Contact Center Desktop", "", 30)
-
-Sleep(5000)
-
-MsgBox(0, "Success", "CCD Login Completed")
-
-
-
-
-
-
-
 ; ==========================================
-; CCD FRAUD CLOSURE AUTOMATION
-; ==========================================
-
-Opt("WinTitleMatchMode", 2)
-
-Global $ccdPath = "C:\CCD\QA01\CCD\ContactCenterDesktop.exe"
-
-; =========================
-; STEP 1: LAUNCH CCD
-; =========================
-Run($ccdPath)
-
-; Handle CCP Alert popup
-WinWait("CCP Alert", "", 20)
-If WinExists("CCP Alert") Then
-    WinActivate("CCP Alert")
-    Sleep(1000)
-    Send("{ENTER}") ; Click OK
-EndIf
-
-; =========================
-; STEP 2: LOGIN WINDOW
-; =========================
-WinWait("Logon", "", 20)
-WinActivate("Logon")
-
-; Select dropdown → OFFLINE - NO PHONE
-Send("{TAB}{TAB}") ; move to dropdown
-Sleep(1000)
-Send("{DOWN}") ; navigate options
-Sleep(500)
-Send("{DOWN}")
-Sleep(500)
-Send("{ENTER}")
-
-Sleep(1000)
-Send("{ENTER}") ; Click OK
-
-; =========================
-; STEP 3: WAIT FOR CCD LOAD
-; =========================
-WinWait("Contact Center Desktop", "", 30)
-WinActivate("Contact Center Desktop")
-Sleep(5000)
-
-; =========================
-; STEP 4: CLICK SPANNER ICON 🔧
-; =========================
-; Using ALT shortcut (fallback: mouse)
-Send("!t") ; Try menu access
-
-Sleep(2000)
-
-; If not working → fallback click (update coords if needed)
-MouseClick("left", 120, 150, 1)
-
-; =========================
-; STEP 5: CUSTOMER IDENTIFICATION POPUP
-; =========================
-WinWait("Customer Identification", "", 20)
-WinActivate("Customer Identification")
-
-; Enter Account Number
-Send("5194520001889254")
-Send("{TAB}")
-
-; Enter SSN
-Send("6027")
-Send("{TAB}")
-
-; Enter DOB
-Send("04/19/1990")
-
-; Click VERIFY CUSTOMER
-Send("{TAB}{TAB}{TAB}")
-Send("{ENTER}")
-
-; =========================
-; STEP 6: CUSTOMER SEARCH RESULT
-; =========================
-WinWait("Customer Search Results", "", 20)
-WinActivate("Customer Search Results")
-
-Sleep(2000)
-
-; Select Customer
-Send("{TAB}{TAB}")
-Send("{ENTER}")
-
-; =========================
-; STEP 7: WAIT ACCOUNT LOAD
-; =========================
-WinWait("Contact Center Desktop", "", 20)
-Sleep(5000)
-
-; =========================
-; STEP 8: CLICK "COMPLETE A FRAUD CLOSURE"
-; =========================
-; Navigate left panel
-Send("{TAB}{TAB}{TAB}")
-Sleep(1000)
-
-; Scroll and select
-Send("complete a fraud closure")
-Sleep(1000)
-Send("{ENTER}")
-
-; =========================
-; STEP 9: WORKFLOW POPUP
-; =========================
-WinWait("AA Deconversion", "", 20)
-WinActivate("AA Deconversion")
-
-; Select first radio button
-Send("{TAB}")
-Send("{SPACE}")
-
-; Click NEXT
-Send("{TAB}{TAB}")
-Send("{ENTER}")
-
-; =========================
-; STEP 10: LOST/STOLEN WORKFLOW
-; =========================
-WinWait("Lost/Stolen", "", 20)
-WinActivate("Lost/Stolen")
-
-Sleep(2000)
-
-; 1. Select primary/joint user
-Send("{TAB}")
-Send("{SPACE}")
-
-; 2. Put temporary hold → NO
-Send("{TAB}")
-Send("No")
-
-; 3. PIN lost → NO
-Send("{TAB}")
-Send("No")
-
-; 4. Missing checks → NO
-Send("{TAB}")
-Send("No")
-
-; 5. Automatic selection → NO
-Send("{TAB}")
-Send("{SPACE}")
-
-; =========================
-; STEP 11: SELECT TRANSACTIONS
-; =========================
-; Move to transaction grid
-Send("{TAB}{TAB}{TAB}{TAB}")
-
-; Select all rows (SHIFT method)
-Send("+{DOWN 10}")
-
-Sleep(1000)
-
-; =========================
-; STEP 12: CONTINUE
-; =========================
-Send("{TAB}{TAB}")
-Send("{ENTER}")
-
-; =========================
-; STEP 13: FINAL CONFIRMATION
-; =========================
-If WinExists("Confirm Needed") Then
-    WinActivate("Confirm Needed")
-    Send("{ENTER}") ; YES
-EndIf
-
-MsgBox(0, "SUCCESS", "Fraud Closure Completed Successfully 🚀")
-
-
-
-
-; ==========================================
-; CCD FULL AUTOMATION - FRAUD CLOSURE
+; CCD INTELLIGENT AUTOMATION (TASKBAR LAUNCH)
 ; ==========================================
 
 Opt("WinTitleMatchMode", 2)
 Opt("SendKeyDelay", 50)
 
-Global $ccdPath = "C:\CCD\QA01\CCD\ContactCenterDesktop.exe"
+; 🔧 CHANGE THIS → based on your taskbar position
+Global $CCD_SHORTCUT = "#3"   ; Win+3 (change if needed)
 
 ; =========================
-; MAIN EXECUTION
+; MAIN FLOW
 ; =========================
-LaunchCCD()
-HandlePopups()
+LaunchCCDFromTaskbar()
+HandleStartupPopups()
 LoginCCD()
 OpenAccountMaintenance()
 CustomerVerification()
@@ -364,41 +26,48 @@ MsgBox(0, "SUCCESS", "Fraud Closure Completed Successfully 🚀")
 ; FUNCTIONS
 ; =========================
 
-Func LaunchCCD()
-    Run($ccdPath)
-    Sleep(4000)
+; -------------------------
+; LAUNCH CCD FROM TASKBAR
+; -------------------------
+Func LaunchCCDFromTaskbar()
+    Send($CCD_SHORTCUT)
+    Sleep(6000)
 EndFunc
 
 ; -------------------------
-; HANDLE POPUPS (GENERIC)
+; HANDLE STARTUP POPUPS
 ; -------------------------
-Func HandlePopups()
+Func HandleStartupPopups()
 
-    For $i = 1 To 5
+    Local $timeout = 0
+
+    While $timeout < 20
 
         ; CCP Alert
         If WinExists("CCP Alert") Then
             WinActivate("CCP Alert")
             Sleep(1000)
             Send("{ENTER}")
+            Sleep(2000)
         EndIf
 
-        ; Version Error
+        ; Version Popup (DO NOT RESTART)
         If WinExists("Invalid Desktop Version") Then
             WinActivate("Invalid Desktop Version")
-            Sleep(1000)
+            Sleep(1500)
             Send("{ENTER}")
-
-            Sleep(2000)
-            ProcessClose("ContactCenterDesktop.exe")
             Sleep(3000)
-
-            Run($ccdPath)
-            Sleep(4000)
         EndIf
 
-        Sleep(2000)
-    Next
+        ; Wait until login appears
+        If WinExists("Logon") Then
+            ExitLoop
+        EndIf
+
+        Sleep(1000)
+        $timeout += 1
+
+    WEnd
 
 EndFunc
 
@@ -412,7 +81,7 @@ Func LoginCCD()
 
     Sleep(2000)
 
-    ; Navigate to dropdown
+    ; Move to Channel dropdown
     Send("{TAB}{TAB}")
     Sleep(1000)
 
@@ -426,7 +95,6 @@ Func LoginCCD()
     ; Click OK
     Send("{ENTER}")
 
-    ; Wait for main screen
     WinWait("Contact Center Desktop", "", 30)
     Sleep(5000)
 
@@ -440,11 +108,7 @@ Func OpenAccountMaintenance()
     WinActivate("Contact Center Desktop")
     Sleep(3000)
 
-    ; Try menu shortcut
-    Send("!t")
-    Sleep(2000)
-
-    ; Fallback click (UPDATE COORDS IF NEEDED)
+    ; Click spanner icon (adjust if needed)
     MouseClick("left", 120, 150, 1)
 
     Sleep(3000)
@@ -461,16 +125,11 @@ Func CustomerVerification()
 
     Sleep(1000)
 
-    ; Account Number
-    Send("5194520001889254")
+    Send("5194520001889254") ; Account
     Send("{TAB}")
-
-    ; SSN
-    Send("6027")
+    Send("6027")             ; SSN
     Send("{TAB}")
-
-    ; DOB
-    Send("04/19/1990")
+    Send("04/19/1990")       ; DOB
 
     Sleep(1000)
 
@@ -490,7 +149,6 @@ Func SelectCustomer()
 
     Sleep(2000)
 
-    ; Select Customer
     Send("{TAB}{TAB}")
     Send("{ENTER}")
 
@@ -510,7 +168,6 @@ Func LaunchFraudClosure()
     Send("{TAB}{TAB}{TAB}")
     Sleep(1000)
 
-    ; Search/select option
     Send("complete a fraud closure")
     Sleep(1000)
     Send("{ENTER}")
@@ -528,11 +185,11 @@ Func HandleLostStolenWorkflow()
 
     Sleep(1000)
 
-    ; Select first radio button
+    ; Select first option
     Send("{TAB}")
     Send("{SPACE}")
 
-    ; Click Next
+    ; Next
     Send("{TAB}{TAB}")
     Send("{ENTER}")
 
@@ -544,51 +201,42 @@ Func HandleLostStolenWorkflow()
 
     Sleep(2000)
 
-    ; 1. Primary user
+    ; Primary user
     Send("{TAB}")
     Send("{SPACE}")
 
-    ; 2. Temp hold → No
+    ; Temp hold → No
     Send("{TAB}")
     Send("No")
 
-    ; 3. PIN lost → No
+    ; PIN lost → No
     Send("{TAB}")
     Send("No")
 
-    ; 4. Missing checks → No
+    ; Missing checks → No
     Send("{TAB}")
     Send("No")
 
-    ; 5. Auto selection → No
+    ; Auto selection → No
     Send("{TAB}")
     Send("{SPACE}")
 
     Sleep(1000)
 
-    ; ---------------------
-    ; SELECT TRANSACTIONS
-    ; ---------------------
-    ; Move to grid
+    ; Select transactions
     Send("{TAB}{TAB}{TAB}{TAB}")
     Sleep(1000)
-
-    ; Select multiple rows
     Send("+{DOWN 10}")
 
     Sleep(1000)
 
-    ; ---------------------
-    ; CONTINUE
-    ; ---------------------
+    ; Continue
     Send("{TAB}{TAB}")
     Send("{ENTER}")
 
     Sleep(2000)
 
-    ; ---------------------
-    ; CONFIRM POPUP
-    ; ---------------------
+    ; Confirm popup
     If WinExists("Confirm Needed") Then
         WinActivate("Confirm Needed")
         Sleep(1000)
@@ -596,5 +244,3 @@ Func HandleLostStolenWorkflow()
     EndIf
 
 EndFunc
-
-
